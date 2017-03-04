@@ -4,10 +4,9 @@ import os.path as Path
 import sys
 import types
 
-import boto
+import boto3
 import warc
 
-from boto.s3.key import Key
 from gzipstream import GzipStreamFile
 from mrjob.job import MRJob
 from mrjob.protocol import RawProtocol
@@ -49,12 +48,12 @@ class CommonJob(MRJob):
     f = None
     # If we are on EC2 or running on a Hadoop cluster, pull files via S3
     if self.options.runner in ['emr', 'hadoop']:
-      # Connect to Amazon S3 using anonymous credentials
-      conn = boto.connect_s3(anon=True)
-      pds = conn.get_bucket('commoncrawl')
-      # Start a connection to one of the WARC files
-      k = Key(pds, line)
-      f = warc.WARCFile(fileobj=GzipStreamFile(k))
+      # Connect to Amazon S3.
+      s3 = boto3.resource('s3')
+      obj = s3.Object('commoncrawl', line)
+      # Hack to get the raw stream out of obj:
+      # http://stackoverflow.com/questions/7624900/how-can-i-use-boto-to-stream-a-file-out-of-amazon-s3-to-rackspace-cloudfiles
+      f = warc.WARCFile(fileobj=GzipStreamFile(obj.get()['Body']._raw_stream))
     # If we are local, use files on the local file system
     else:
       line = Path.join(Path.abspath(Path.dirname(__file__)), line)

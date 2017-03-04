@@ -4,10 +4,13 @@ If git is not installed, for linux, install it using:
 - sudo yum install git-all
 
 Install a bunch of packages needed for this code.
-sudo pip install boto
+sudo pip install boto3
 sudo pip install mrjob
 sudo pip install warc
-sudo pip install -e git+https://github.com/commoncrawl/gzipstream.git#egg=gzipstream
+sudo pip install https://github.com/commoncrawl/gzipstream/archive/master.zip
 
 Eg of running job locally:
 python analysis/domain_count.py --no-output --output-dir out input/example.paths.gz
+
+Eg of running job on EMR:
+python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --no-output --output-dir $OUTPUT_DIR $INPUT_FILEPATH
