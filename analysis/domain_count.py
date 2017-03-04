@@ -34,10 +34,24 @@ class DomainCount(CommonJob):
 
   def steps(self):
     return [
+      # First, key by domain to get the (domain, count).
       MRStep(
           mapper=self.map_warc_files,
           combiner=self.reduce_sum,
           reducer=self.reduce_sum),
+      # Next, grab the topN domains by count. We run the counts through mappers
+      # and then a single reducer which works because the key (domain) is
+      # already unique by then and we have a single reducer in the end.
+      MRStep(
+          mapper_init=self.topn_init,
+          mapper=self.topn_process,
+          mapper_final=self.topn_final,
+          reducer_init=self.topn_init,
+          reducer=self.topn_process,
+          reducer_final=self.topn_final,
+          jobconf = {
+              "mapred.job.reduce.capacity": 1,
+              "mapred.reduce.tasks": 1 })
     ]
 
 if __name__ == '__main__':

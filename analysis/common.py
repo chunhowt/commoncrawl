@@ -1,6 +1,8 @@
 import gzip
+import heapq
 import os.path as Path
 import sys
+import types
 
 import boto
 import warc
@@ -20,6 +22,9 @@ class CommonJob(MRJob):
     super(CommonJob, self).configure_options()
     self.pass_through_option('--runner')
     self.pass_through_option('-r')
+    self.add_passthrough_option(
+        '--topn', type='int', default=100,
+        help='specify parameter n for topN algorithm')
 
   def process_warc_record(self, record):
     """Override process_record with your mapper.
@@ -66,3 +71,31 @@ class CommonJob(MRJob):
     """Default reducer to sum the values for the key.
     """
     yield key, sum(value)
+
+  def topn_init(self):
+    """Initializes a min heap."""
+    self.min_heap = []
+
+  def topn_process(self, key, value):
+    """Insert the key, value pair into the heap.
+
+    Note: Each call to this method should have a unique key.
+    Note: If the self.min_heap has >= self.options.topn items, the smaller
+          items will be popped away.
+
+    Args:
+      key: Any key that is unique across various calls.
+      value: Either a single int (when called in map) or a generator of integers
+             (when called in reduce).
+    """
+    count = sum(value) if type(value) == types.GeneratorType else value
+    if len(self.min_heap) >= self.options.topn:
+      heapq.heappushpop(self.min_heap, (count, key))
+    else:
+      heapq.heappush(self.min_heap, (count, key))
+
+  def topn_final(self):
+    """Yield the key, value for each of the heap entry."""
+    while self.min_heap:
+      (val, key) = heapq.heappop(self.min_heap)
+      yield key, val
