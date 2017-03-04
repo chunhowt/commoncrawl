@@ -16,14 +16,14 @@ class CommonJob(MRJob):
   """Based on https://github.com/commoncrawl/cc-mrjob/blob/master/mrcc.py
   """
   HADOOP_INPUT_FORMAT = 'org.apache.hadoop.mapred.lib.NLineInputFormat'
-  #INPUT_PROTOCOL = RawProtocol
+  INPUT_PROTOCOL = RawProtocol
 
   def configure_options(self):
     super(CommonJob, self).configure_options()
     self.pass_through_option('--runner')
     self.pass_through_option('-r')
     self.add_passthrough_option(
-        '--topn', type='int', default=100,
+        '--topn', type='int', default=1000,
         help='specify parameter n for topN algorithm')
 
   def process_warc_record(self, record):

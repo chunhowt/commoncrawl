@@ -51,7 +51,7 @@ class DomainCount(CommonJob):
           reducer_final=self.topn_final,
           jobconf = {
               "mapred.job.reduce.capacity": 1,
-              "mapred.reduce.tasks": 1 })
+              "mapreduce.job.reduces": 1 })
     ]
 
 if __name__ == '__main__':
