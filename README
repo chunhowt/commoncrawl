@@ -1,0 +1,13 @@
+Pre-requisite:
+
+If git is not installed, for linux, install it using:
+- sudo yum install git-all
+
+Install a bunch of packages needed for this code.
+sudo pip install boto3
+sudo pip install mrjob
+sudo pip install warc
+sudo pip install -e git+https://github.com/commoncrawl/gzipstream.git#egg=gzipstream
+
+Eg of running job locally:
+python analysis/domain_count.py -r local --no-output --output-dir out input/example.paths.gz
