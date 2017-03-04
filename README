@@ -1,8 +1,4 @@
 Pre-requisite:
-
-If git is not installed, for linux, install it using:
-- sudo yum install git-all
-
 Install a bunch of packages needed for this code.
 sudo pip install boto3
 sudo pip install mrjob
@@ -16,7 +12,7 @@ Eg of running job on EMR for testing:
 python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --no-output --output-dir $OUTPUT_DIR $INPUT_FILEPATH
 
 For full run, change the num of core instances appropriately:
-python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --num_core_instances=10 --no-output --output-dir $OUTPUT_DIR $INPUT_FILEPATH
+python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --num-core-instances=10 --no-output --output-dir $OUTPUT_DIR $INPUT_FILEPATH
 
 Example of $INPUT_FILEPATH is:
 s3://commoncrawl/crawl-data/CC-MAIN-2017-04/wet.paths.gz
