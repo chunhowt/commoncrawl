@@ -16,4 +16,5 @@ python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --no-outp
 
 Example of $INPUT_FILEPATH is:
 s3://commoncrawl/crawl-data/CC-MAIN-2017-04/wet.paths.gz
-NOTE: As of 3/4/2017, the gz version might not work due to org.apache.hadoop.mapred.lib.NLineInputFormat not able to deal with compress file.
+NOTE: As of 3/4/2017, the gz version might not work due to org.apache.hadoop.mapred.lib.NLineInputFormat not able to deal with compressed file.
+NOTE: As of 3/4/2017, I used 5 c3.xlarge core instances for 1 hour to process a sample of 500 wet.paths (out of about 57800 paths).
