@@ -1,3 +1,9 @@
+This project explores processing the data provided by commoncrawl using Amazon EMR.
+http://commoncrawl.org/about/
+
+Example commoncrawl data can be found here: 
+https://github.com/commoncrawl/cc-mrjob
+
 Pre-requisite:
 Install a bunch of packages needed for this code.
 sudo pip install boto3
@@ -8,11 +14,11 @@ sudo pip install https://github.com/commoncrawl/gzipstream/archive/master.zip
 Eg of running job locally:
 python analysis/domain_count.py --no-output --output-dir out input/example.paths.gz
 
-Eg of running job on EMR for testing:
-python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --no-output --output-dir $OUTPUT_DIR $INPUT_FILEPATH
+Eg of running job on EMR for testing (using just the master):
+python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --num-core-instances=0 --no-output --output-dir $OUTPUT_DIR $INPUT_FILEPATH
 
 For full run, change the num of core instances appropriately:
-python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --no-output --output-dir $OUTPUT_DIR $INPUT_FILEPATH
+python analysis/domain_count.py -r emr --conf-path analysis/mrjob.conf --num-core-instances=5 --no-output --output-dir $OUTPUT_DIR $INPUT_FILEPATH
 
 Example of $INPUT_FILEPATH is:
 s3://commoncrawl/crawl-data/CC-MAIN-2017-04/wet.paths.gz
