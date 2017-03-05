@@ -66,9 +66,13 @@ class CommonJob(MRJob):
         yield key, value
     self.increment_counter('commoncrawl', 'num-files', 1)
 
+  def combiner_sum(self, key, value):
+    """Default combiner to sum the values for the key."""
+    yield key, sum(value)
+
   def reduce_sum(self, key, value):
-    """Default reducer to sum the values for the key.
-    """
+    """Default reducer to sum the values for the key."""
+    self.increment_counter('common', 'unique-key', 1)
     yield key, sum(value)
 
   def topn_init(self):
